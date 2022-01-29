@@ -31,15 +31,25 @@ export const getReport = async (req: Request, res: Response) => {
             year: parseInt(req.params.year),
             caregivers: []
         };
-
-        for ( let row of result.rows) {
+        for (let row of result.rows) {
+            const yearDate = new Date(row.visit_date);
+           
+            const index = report.caregivers.findIndex(element => {
+               if (element.name == row.caregiver_name) {
+                  return true;
+                }
+                else return false;
+              });
+            if(yearDate.getFullYear().toString()==req.params.year&&index==-1)            
             report.caregivers.push({
                 name: row.caregiver_name,
                 patients: [row.patient_name]
-            })
+            });
+            else if(yearDate.getFullYear().toString()==req.params.year&&index!=-1)
+            report.caregivers[index].patients.push(row.patient_name);
         }
         res.status(200).json(report);
-    } catch (error) {
+    } catch (error: any) {
         throw new Error(error.message);
     }
 

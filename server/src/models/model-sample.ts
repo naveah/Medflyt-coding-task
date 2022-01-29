@@ -14,7 +14,7 @@ export const getTimeModel = async () => {
     try {
         result = await dbUtil.sqlToDB(sql, data);
         return result;
-    } catch (error) {
+    } catch (error: any) {
         throw new Error(error.message);
     }
 }
@@ -34,7 +34,7 @@ export const sampleTransactionModel = async () => {
         await dbUtil.sqlExecMultipleRows(client, multiSql, multiData);
         await dbUtil.commit(client);
         return transactionSuccess;
-    } catch (error) {
+    } catch (error:any) {
         await dbUtil.rollback(client);
         logger.error(`sampleTransactionModel error: ${error.message}`);
         throw new Error(error.message);

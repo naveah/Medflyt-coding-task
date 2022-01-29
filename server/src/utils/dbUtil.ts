@@ -32,7 +32,7 @@ export const sqlToDB = async (sql:string, data:string[]) => {
     try {
         result = await pool.query(sql, data);
         return result;
-    } catch (error) {
+    } catch (error:any) {
         throw new Error(error.message);
     }
 }
@@ -47,7 +47,7 @@ export const getTransaction = async () => {
     try {
         await client.query('BEGIN');
         return client;
-    } catch (error) {
+    } catch (error:any) {
         throw new Error(error.message);
     }
 }
@@ -65,7 +65,7 @@ export const sqlExecSingleRow = async (client:Client, sql:string, data:string[][
         result = await client.query(sql, data);
         logger.debug(`sqlExecSingleRow(): ${result.command} | ${result.rowCount}`);
         return result
-    } catch (error) {
+    } catch (error:any) {
         logger.error(`sqlExecSingleRow() error: ${error.message} | sql: ${sql} | data: ${data}`);
         throw new Error(error.message);
     }
@@ -86,7 +86,7 @@ export const sqlExecMultipleRows = async (client:Client, sql:string, data:string
                 logger.debug(`sqlExecMultipleRows() item: ${item}`);
                 logger.debug(`sqlExecMultipleRows() sql: ${sql}`);
                 await client.query(sql, item);
-            } catch (error) {
+            } catch (error:any) {
                 logger.error(`sqlExecMultipleRows() error: ${error}`);
                 throw new Error(error.message);
             }
@@ -105,7 +105,7 @@ export const rollback = async (client:Client) => {
         try {
             logger.info(`sql transaction rollback`);
             await client.query('ROLLBACK');
-        } catch (error) {
+        } catch (error:any) {
             throw new Error(error.message);
         } finally {
             client.release();
@@ -122,7 +122,7 @@ export const commit = async (client:Client) => {
     logger.debug(`sql transaction committed`);
     try {
         await client.query('COMMIT');
-    } catch (error) {
+    } catch (error:any) {
         throw new Error(error.message);
     } finally {
         client.release();

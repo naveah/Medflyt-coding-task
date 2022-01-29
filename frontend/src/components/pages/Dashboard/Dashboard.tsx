@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import * as t from "io-ts";
 import { PathReporter } from "io-ts/PathReporter";
 import React from "react";
@@ -35,6 +35,7 @@ type State =
       };
 
 function useDashboard(params: { year: number }) {
+   // debugger;
     const [state, setState] = React.useState<State>({ type: "Initial" });
 
     const startLoading = () => {
@@ -53,14 +54,16 @@ function useDashboard(params: { year: number }) {
         startLoading();
 
         return axios
-            .get<unknown>(endpoint(`reports/${params.year}`))
+            .get<AxiosResponse>(endpoint(`reports/${params.year}`))
             .then((response) => {
-                if (!resType.is(response)) {
+                //debugger;
+                console.log(response);
+                if (!resType.is(response.data)) {
                     console.error(PathReporter.report(resType.decode(response)).join(", "));
                     throw new Error("Error");
                 }
 
-                setState({ type: "Resolved", report: response, isRefreshing: false });
+                setState({ type: "Resolved", report: response.data, isRefreshing: false });
             })
             .catch(() => {
                 setState({ type: "Rejected", error: "Error" });

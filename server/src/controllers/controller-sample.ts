@@ -9,7 +9,7 @@ export const getTime = async (req: Request, res: Response) => {
     try {
         result = await sampleModel.getTimeModel();
         res.status(200).json(result.rows);
-    } catch (error) {
+    } catch (error:any) {
         logger.error(`getTime error: ${error.message}`);
         res.status(500).json({error: error.message});
     }
